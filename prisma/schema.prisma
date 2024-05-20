@@ -48,3 +48,21 @@ model Account {
  
   @@id([provider, providerAccountId])
 }
+
+model VerificationToken{
+  id String @id @default(cuid())
+  email String
+  token String @unique
+  expired DateTime
+
+  @@unique([email,token])
+}
+
+model PasswordResetToken {
+  id String @id @default(cuid())
+  email String
+  token String @unique
+  expires DateTime
+
+  @@unique([email,token])
+}
