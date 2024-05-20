@@ -18,12 +18,11 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { FormError } from "@/components/form-error";
 import { FormSuccess } from "@/components/form-success";
-import { reset } from "@/actions/reset";
-import { useState, useTransition } from "react";
+import { Suspense, useState, useTransition } from "react";
 import { NewPasswordSchema } from "@/schemas";
 import { newPassword } from "@/actions/new-password";
 
-export const NewPasswordForm = () => {
+const NewPasswordFormContent = () => {
   const [error, setError] = useState<string | undefined>();
   const [success, setSuccess] = useState<string | undefined>();
   const [isPending, startTransition] = useTransition();
@@ -84,5 +83,13 @@ export const NewPasswordForm = () => {
         </form>
       </Form>
     </CardWrapper>
+  );
+};
+
+export const NewPasswordForm = () => {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <NewPasswordFormContent />
+    </Suspense>
   );
 };
