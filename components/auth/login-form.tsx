@@ -22,9 +22,10 @@ import { FormSuccess } from "@/components/form-success";
 import { login } from "@/actions/login";
 import { useState, useTransition } from "react";
 import { useSearchParams } from "next/navigation";
+import { Suspense } from "react";
 import Link from "next/link";
 
-export const LoginForm = () => {
+const LoginFormContent = () => {
   const searchParams = useSearchParams();
   const urlError =
     searchParams.get("error") === "OAuthAccountNotLinked"
@@ -115,5 +116,13 @@ export const LoginForm = () => {
         </form>
       </Form>
     </CardWrapper>
+  );
+};
+
+export const LoginForm = () => {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <LoginFormContent />
+    </Suspense>
   );
 };
