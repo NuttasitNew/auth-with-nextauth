@@ -10,7 +10,7 @@ import {
 
 const { auth } = NextAuth(authConfig);
 
-export default auth((req) => {
+export default auth(async (req) => {
   const { nextUrl } = req;
   const isLoggedIn = !!req.auth;
 
@@ -19,7 +19,7 @@ export default auth((req) => {
   const isAuthRoute = authRoutes.includes(nextUrl.pathname);
 
   if (isApiAuthRoute) {
-    return null;
+    return;
   }
 
   if (isAuthRoute) {
@@ -27,14 +27,14 @@ export default auth((req) => {
       return Response.redirect(new URL(DEFAULT_LOGIN_REDIRECT, nextUrl));
       // create absolute url with parameter "nextUrl"
     }
-    return null;
+    return;
   }
 
   if (!isLoggedIn && !isPublicRoute) {
     return Response.redirect(new URL("/auth/login", nextUrl));
   }
 
-  return null;
+  return;
 });
 
 export const config = {
