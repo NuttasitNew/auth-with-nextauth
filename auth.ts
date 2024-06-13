@@ -49,7 +49,6 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       return true;
     },
     async session({ token, session }) {
-      console.log({ sessionToken: token });
       if (token.sub && session.user) {
         session.user.id = token.sub;
       }
@@ -59,16 +58,28 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       if (token.role && session.user) {
         session.user.role = token.role as UserRole;
       }
+      if (session.user) {
+        session.user.isTwoFactorEnabled = token.isTwoFactorEnabled as boolean;
+      }
+
+      if (session.user) {
+        session.user.name = token.name;
+        session.user.email = token.email || "";
+      }
       return session;
     },
     async jwt({ token }) {
+      console.log("I AM BEING CALLED AGAIN");
       if (!token.sub) return token; // it mean i'm logout
 
       const existingUser = await getUserById(token.sub);
 
       if (!existingUser) return token;
 
+      token.name = existingUser.name;
+      token.email = existingUser.email;
       token.role = existingUser.role;
+      token.isTwoFactorEnabled = existingUser.isTwoFactorEnabled;
       return token;
     },
   },

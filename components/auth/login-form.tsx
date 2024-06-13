@@ -55,8 +55,11 @@ const LoginFormContent = () => {
             form.reset();
             setSuccess(data?.success);
           }
+          if (data?.twoFactor) {
+            setShowTwoFactor(true);
+          }
         })
-        .catch();
+        .catch(() => setError("Something went wrong"));
     });
   };
 
