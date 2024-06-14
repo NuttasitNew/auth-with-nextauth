@@ -72,8 +72,12 @@ export const { handlers, auth, signIn, signOut, unstable_update } = NextAuth({
       }
       return session;
     },
-    async jwt({ token }) {
+    async jwt({ token, trigger }) {
       console.log("I AM BEING CALLED AGAIN");
+      if (trigger === "signIn") {
+        console.log("Call from trigger SignIn");
+      }
+      if (trigger === "update") console.log("Call When Trigger Update");
       if (!token.sub) return token; // it mean i'm logout
 
       const existingUser = await getUserById(token.sub);
@@ -87,6 +91,7 @@ export const { handlers, auth, signIn, signOut, unstable_update } = NextAuth({
       token.email = existingUser.email;
       token.role = existingUser.role;
       token.isTwoFactorEnabled = existingUser.isTwoFactorEnabled;
+
       return token;
     },
   },

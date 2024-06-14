@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { UserInfo } from "../_components/user-info";
+import { UserInfo } from "@/app/(protected)/_components/user-info";
 import { useSession } from "next-auth/react";
 
 const ClientPage = () => {
@@ -9,8 +9,13 @@ const ClientPage = () => {
   const user = session?.user;
   const [isLoading, setIsLoading] = useState(true);
 
+  console.log({ status });
+  if (status === "unauthenticated") {
+    window.location.reload();
+  }
+
   useEffect(() => {
-    if (status !== "loading") {
+    if (status !== "loading" && status === "authenticated") {
       setIsLoading(false);
     }
   }, [status]);
@@ -22,8 +27,6 @@ const ClientPage = () => {
   if (status === "authenticated") {
     return <UserInfo label="Client component" user={user} />;
   }
-
-  return <div>Please log in to view this content.</div>;
 };
 
 export default ClientPage;
