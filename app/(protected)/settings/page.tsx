@@ -7,7 +7,7 @@ import { settings } from "@/actions/settings";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { useCurrentUser } from "@/hooks/use-current-user";
-import { useSession } from "next-auth/react";
+
 import { useState, useTransition } from "react";
 
 import { Switch } from "@/components/ui/switch";
@@ -35,7 +35,7 @@ import { UserRole } from "@prisma/client";
 
 export default function SettingsPage() {
   const user = useCurrentUser();
-  const { update } = useSession();
+
   const [error, setError] = useState<string | undefined>();
   const [success, setSuccess] = useState<string | undefined>();
   const [isPending, startTransition] = useTransition();
@@ -48,6 +48,7 @@ export default function SettingsPage() {
       password: undefined,
       newPassword: undefined,
       role: user?.role || undefined,
+      isTwoFactorEnabled: user?.isTwoFactorEnabled || undefined,
     },
   });
 
@@ -59,7 +60,6 @@ export default function SettingsPage() {
             setError(data.error);
           }
           if (data.success) {
-            update();
             setSuccess(data.success);
           }
         })

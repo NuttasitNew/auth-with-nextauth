@@ -1,14 +1,29 @@
 "use client";
 
-import { currentUser } from "@/lib/auth";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { UserInfo } from "../_components/user-info";
-import { useCurrentUser } from "@/hooks/use-current-user";
+import { useSession } from "next-auth/react";
 
 const ClientPage = () => {
-  const user = useCurrentUser();
+  const { data: session, status } = useSession();
+  const user = session?.user;
+  const [isLoading, setIsLoading] = useState(true);
 
-  return <UserInfo label="Client component" user={user} />;
+  useEffect(() => {
+    if (status !== "loading") {
+      setIsLoading(false);
+    }
+  }, [status]);
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  if (status === "authenticated") {
+    return <UserInfo label="Client component" user={user} />;
+  }
+
+  return <div>Please log in to view this content.</div>;
 };
 
 export default ClientPage;
